@@ -1,0 +1,19 @@
+---
+layout: default.njk
+---
+
+{% include "head.html" %}
+{% include "header.html" %}
+
+<ul id="page-list">
+  {% for page in site.pages %}
+    {% if page.title and page.tags %}
+      <li class="page-item" data-tags="{{ page.tags | join(',') }}">
+        <a href="{{ page.url }}">{{ page.title }}</a>
+        <small>[{{ page.tags | join(', ') }}]</small>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+{% include "footer.html" %}

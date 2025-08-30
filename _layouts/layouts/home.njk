@@ -1,0 +1,28 @@
+{% include "head.html" %}
+{% include "header.html" %}
+
+<h1 class="sr-only">What I've been reading</h1>
+
+<!-- Tag Filter -->
+<div id="tag-filters">
+  <strong>Filter by tag:</strong>
+  {% set all_tags = site.posts | map(attribute='tags') | flatten | unique %}
+  {% for tag in all_tags %}
+    {% if tag %}
+      <button class="tag-btn" data-tag="{{ tag | lower | replace(" ", "-") }}">{{ tag }}</button>
+    {% endif %}
+  {% endfor %}
+  <button id="clear-filters">Show All</button>
+</div>
+
+<!-- Book List -->
+<ul class="covers" id="book-list">
+  {% for post in site.posts %}
+    {% set current_book = post.book %}
+    <li class="cover" data-tags="{{ post.tags | join(",") | lower }}">
+      <a href="{{ pathPrefix }}{{ post.url }}" class="book__image" data-bgSrc="{{ pathPrefix }}/assets/images/covers/{{ current_book }}.jpg" title="{{ post.title }}">
+        {% include "svgs/" ~ current_book ~ ".svg" %}
+      </a>
+    </li>
+  {% endfor %}
+</ul

@@ -1,0 +1,64 @@
+{% include "head.html" %}
+{% include "header.html" %}
+
+<!-- Optional Tag Filter -->
+<div id="tag-filters">
+  <strong>Filter by tag:</strong>
+  {% set all_tags = paginator.posts | map(attribute='tags') | flatten | unique %}
+  {% for tag in all_tags %}
+    {% if tag %}
+      <button class="tag-btn" data-tag="{{ tag | lower | replace(" ", "-") }}">{{ tag }}</button>
+    {% endif %}
+  {% endfor %}
+  <button id="clear-filters">Show All</button>
+</div>
+
+{% for post in paginator.posts %}
+  {% set individualPost = false %}
+  {% include "post-contents.html" %}
+{% endfor %}
+
+<!-- PAGINATION -->
+<nav class="pagination" aria-label="pagination">
+  {% if paginator.next_page %}
+    <a class="pagination__older" href="{{ paginator.next_page_path }}" title="Older posts">
+      <svg viewBox="0 0 30 30" width="30" height="30">
+        <use xlink:href="#older"></use>
+      </svg>
+    </a>
+  {% endif %}
+  {% if paginator.previous_page %}
+    <a class="pagination__newer" href="{{ paginator.previous_page_path }}" title="Newer posts">
+      <svg viewBox="0 0 30 30" width="30" height="30">
+        <use xlink:href="#newer"></use>
+      </svg>
+    </a>
+  {% endif %}
+</nav>
+
+{% include "footer.html" %}
+
+<!-- JS for filtering -->
+<script>
+  const tagButtons = document.querySelectorAll('.tag-btn');
+  const clearBtn = document.getElementById('clear-filters');
+  const posts = document.querySelectorAll('.post-item');
+
+  tagButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const tag = button.getAttribute('data-tag');
+      posts.forEach(post => {
+        const itemTags = post.dataset.tags.split(',');
+        if (itemTags.includes(tag)) {
+          post.style.display = 'block';
+        } else {
+          post.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    posts.forEach(post => post.style.display = 'block');
+  });
+</script>
